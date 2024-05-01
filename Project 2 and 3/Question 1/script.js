@@ -1,4 +1,3 @@
-// Function to fetch and process stock price data
 async function fetchStockData() {
     const apiUrl = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&month=2009-01&outputsize=full&apikey=demo'; // Replace with your API endpoint
     try {
@@ -16,7 +15,6 @@ async function fetchStockData() {
     }
 }
 
-// Function to render stock price chart using Plotly.js
 async function renderStockChart() {
     const intervalSelect = document.getElementById('intervalSelect');
     const selectedInterval = intervalSelect.value;
@@ -60,5 +58,4 @@ async function renderStockChart() {
     Plotly.newPlot('chartContainer', chartData, layout);
 }
 
-// Initial chart rendering on page load
 renderStockChart();
