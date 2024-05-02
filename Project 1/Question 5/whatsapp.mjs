@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 
 const groupName = 'Test Group';
-const contactNames = ['Alice', 'Bob', 'Charlie'];
+const contactNames = 'Arjun Arvind BE22 IITM';
 
 (async (groupName, contactNames) => {
   // Launch the browser and open a new blank page
@@ -13,21 +13,18 @@ const contactNames = ['Alice', 'Bob', 'Charlie'];
     await page.setViewport({width: 1080, height: 1024});
 
     
-    await page.waitForSelector('.item[data-icon="menu"]', { timeout: 100000 });
-    await page.click('.item[data-icon="menu"]');
+    await page.waitForSelector("div[title='Menu']", { timeout: 100000 });
+    await page.click("div[title='Menu']");
 
-    await page.waitForSelector('div[title="New group"]', { timeout: 100000 });
-    await page.click('div[title="New group"]');
+    await page.waitForSelector("div[aria-label='New group']", { timeout: 100000 });
+    await page.click("div[aria-label='New group']");
 
-    await page.waitForSelector('input[title="Search contacts"]', { timeout: 100000 });
-
-    for (let i = 1; i < contactNames.length; i++) {
-      await page.type('input[title="Search contacts"]', contactNames[i]);
-      await page.waitForSelector('.matched-text', { timeout: 100000 });
-      await page.click('.matched-text');
-      await page.keyboard.press('Enter');
-      await page.type('input[title="Search contacts"]', '');
-    }
+    await page.waitForSelector('input[placeholder="Search name or number"]', { timeout: 100000 });
+    await page.type('input[placeholder="Search name or number"]', contactNames);
+    await page.waitForSelector('.matched-text', { timeout: 100000 });
+    await page.click('.matched-text');
+    await page.keyboard.press('Enter');
+    await page.type('input[title="Search contacts"]', '');
 
     await page.waitForSelector('span[data-icon="forward-arrow"]', { timeout: 100000 });
     await page.click('span[data-icon="forward-arrow"]');
