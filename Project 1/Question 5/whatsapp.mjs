@@ -21,18 +21,17 @@ const contactNames = 'Arjun Arvind BE22 IITM';
 
     await page.waitForSelector('input[placeholder="Search name or number"]', { timeout: 100000 });
     await page.type('input[placeholder="Search name or number"]', contactNames);
-    await page.waitForSelector('.matched-text', { timeout: 100000 });
-    await page.click('.matched-text');
-    await page.keyboard.press('Enter');
-    await page.type('input[title="Search contacts"]', '');
+    
+    await page.waitForSelector(`span[title={contactNames}]`, { timeout: 100000 });
+    await page.click(`span[title={contactNames}]`);
 
-    await page.waitForSelector('span[data-icon="forward-arrow"]', { timeout: 100000 });
-    await page.click('span[data-icon="forward-arrow"]');
+    await page.waitForSelector('div[aria-label="Next"]', { timeout: 100000 });
+    await page.click('div[aria-label="Next"]');
 
-    await page.waitForSelector('div[title="Enter group subject"]', { timeout: 100000 });
-    await page.type('div[title="Enter group subject"]', groupName);
+    await page.waitForSelector('div[aria-label="Create group"]', { timeout: 100000 });
+    await page.type(groupName);
 
-    await page.waitForSelector('span[data-icon="check"]', { timeout: 100000 });
+    await page.click('div[aria-label="Create group"]');
     
     console.log('WhatsApp group created successfully!');
 
