@@ -5,7 +5,10 @@ const contactNames = 'Arjun Arvind BE22 IITM';
 
 (async (groupName, contactNames) => {
   // Launch the browser and open a new blank page
-  const browser = await puppeteer.launch({headless: false});
+  const browser = await puppeteer.launch({
+    headless: false,
+    executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+    slowMo: 50});
   const page = await browser.newPage();
 
   try {
@@ -19,8 +22,9 @@ const contactNames = 'Arjun Arvind BE22 IITM';
     await page.waitForSelector("div[aria-label='New group']", { timeout: 100000 });
     await page.click("div[aria-label='New group']");
 
-    await page.waitForSelector('input[placeholder="Search name or number"]', { timeout: 100000 });
-    await page.type('input[placeholder="Search name or number"]', contactNames);
+    // await page.waitForSelector('input[placeholder="Search name or number"]', { timeout: 100000 });
+    // await page.type('input[placeholder="Search name or number"]', contactNames);
+    await page.type(contactNames);
     
     await page.waitForSelector(`span[title={contactNames}]`, { timeout: 100000 });
     await page.click(`span[title={contactNames}]`);
@@ -40,6 +44,5 @@ const contactNames = 'Arjun Arvind BE22 IITM';
   }finally{
     await browser.close();
   }
-
 
 })();
