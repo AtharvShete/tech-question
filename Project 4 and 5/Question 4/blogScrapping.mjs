@@ -1,36 +1,47 @@
-import puppeteer from "puppeteer-core";
-import fs from "fs";
-import ObjectToCSV from "objects-to-csv";
+import puppeteer from 'puppeteer-core';
+import ObjectsToCsv from 'objects-to-csv';
 
-const blogScrapping = async () => {
-    const browser = await puppeteer.launch({ headless: true });
+async function scrapeBlogsAndSaveToCSV() {
+    const browser = await puppeteer.launch({
+        executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', 
+    });
     const page = await browser.newPage();
+    await page.goto('https://blog.ankitsanghvi.in/');
 
-    try {
-        // Navigate to the blog website
-        await page.goto('https://blog.ankitsanghvi.in/');
+    const blogs = await page.evaluate(() => {
+        const blogPosts = document.querySelectorAll('article.post-card');
 
-        // Wait for the blog post titles to load
-        await page.waitForSelector('.post-title');
+        const data = [];
+        blogPosts.forEach((post) => {
+            const title = post.querySelector('h2.post-card-title').textContent.trim();
+            const tag = post.querySelector('div.post-card-primary-tag').textContent.trim();
+            const imageUrl = post.querySelector('img.post-card-image').src;
+            const date = post.querySelector('time').getAttribute('datetime');
+            const readTime = post.querySelector('.post-card-byline-date').textContent.trim().split('•')[1].trim();
+            const excerpt = post.querySelector('.post-card-excerpt').textContent.trim();
 
-        // Extract blog titles and URLs
-        const blogData = await page.evaluate(() => {
-            const titles = Array.from(document.querySelectorAll('.post-title'));
-            return titles.map(titleElement => {
-                const title = titleElement.innerText.trim();
-                const url = titleElement.querySelector('a').href;
-                return { title, url };
+            data.push({
+                title,
+                tag,
+                imageUrl,
+                date,
+                readTime,
+                excerpt,
             });
         });
 
-        // Write data to CSV file
-        const csvFilePath = 'blogs.csv';
-        const csv = new ObjectsToCsv(blogData);
-        await csv.toDisk(csvFilePath);
-        console.log(`Blogs scraped successfully. Data saved to ${csvFilePath}`);
-    } catch (error) {
-        console.error('Error during scraping:', error);
-    } finally {
-        await browser.close();
-    }
+        return data;
+    });
+
+    // Convert the extracted data to CSV format
+    const csv = new ObjectsToCsv(blogs);
+
+    // Save the CSV file to disk
+    await csv.toDisk('./blogPosts.csv', { append: false });
+
+    console.log('Scraped blog data saved to blogPosts.csv');
+
+    await browser.close();
 }
+
+scrapeBlogsAndSaveToCSV().catch((error) => console.error('Error scraping and saving blogs:', error));
