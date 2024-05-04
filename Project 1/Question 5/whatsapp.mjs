@@ -38,10 +38,9 @@ const contactNames = 'Arjun Arvind BE22 IITM';
 
     console.log('WhatsApp group created successfully!');
 
-    // Close the browser after completion
     await browser.close();
   } catch (error) {
     console.error('Error creating WhatsApp group:', error);
-    process.exit(1); // Exit with non-zero code to indicate failure
+    process.exit(1); 
   }
 })();
